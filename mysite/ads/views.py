@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 
 from ads.forms import CreateForm
 
@@ -23,7 +24,7 @@ class AdCreateView(LoginRequiredMixin, View):
     # # List the fields to copy from th
     # # e Ad model to the Ad form
     # fields = ['title', 'text', 'price']
-    template_name = 'ads/form.html'
+    template_name = 'ads/ad_form.html'
     success_url = reverse_lazy('ads:all')
 
     def get(self, request, pk=None):
@@ -50,7 +51,7 @@ class AdUpdateView(LoginRequiredMixin, View):
     # fields = ['title', 'text', 'price']
     # # This would make more sense
     # # fields_exclude = ['owner', 'created_at', 'updated_at']
-    template_name = 'ads/form.html'
+    template_name = 'ads/ad_form.html'
     success_url = reverse_lazy('ads:all')
 
     def get(self, request, pk):
@@ -76,3 +77,12 @@ class AdUpdateView(LoginRequiredMixin, View):
 
 class AdDeleteView(OwnerDeleteView):
     model = Ad
+
+
+def stream_file(request, pk):
+    ad = get_object_or_404(Ad, id=pk)
+    response = HttpResponse()
+    response['Content-Type'] = ad.content_type
+    response['Content-Length'] = len(ad.picture)
+    response.write(ad.picture)
+    return response
