@@ -23,9 +23,9 @@ class AdCreateView(LoginRequiredMixin, View):
     # model = Ad
     # # List the fields to copy from th
     # # e Ad model to the Ad form
-    # fields = ['title', 'text', 'price']
     template_name = 'ads/ad_form.html'
     success_url = reverse_lazy('ads:all')
+    # fields = ['title', 'text', 'price']
 
     def get(self, request, pk=None):
         form = CreateForm()
